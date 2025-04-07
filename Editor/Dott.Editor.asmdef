@@ -1,0 +1,10 @@
+{
+	"name": "Dott.Editor",
+	"references": [
+		"Dott",
+		"DOTweenPro.Scripts"
+	],
+	"includePlatforms": [
+		"Editor"
+	]
+}

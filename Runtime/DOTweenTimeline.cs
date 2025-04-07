@@ -64,5 +64,44 @@ namespace Dott
                 doTweenAnimation.autoGenerate = false;
             }
         }
+
+#if UNITY_EDITOR
+        [ContextMenu("Create ASMDEF")]
+        private void CreateAsmdef()
+        {
+            var packagePath = GetCurrentFilePath();
+            packagePath = System.IO.Directory.GetParent(packagePath).Parent.FullName;
+
+            var runtimePath = System.IO.Path.Combine(packagePath, "Runtime", "Dott.asmdef");
+            using (var stream = System.IO.File.CreateText(runtimePath))
+            {
+                stream.WriteLine("{");
+                stream.WriteLine("\t\"name\": \"Dott\",");
+                stream.WriteLine("\t\"references\": [");
+                stream.WriteLine("\t\t\"DOTweenPro.Scripts\"");
+                stream.WriteLine("\t]");
+                stream.WriteLine("}");
+            }
+
+            var editorPath = System.IO.Path.Combine(packagePath, "Editor", "Dott.Editor.asmdef");
+            using (var stream = System.IO.File.CreateText(editorPath))
+            {
+                stream.WriteLine("{");
+                stream.WriteLine("\t\"name\": \"Dott.Editor\",");
+                stream.WriteLine("\t\"references\": [");
+                stream.WriteLine("\t\t\"Dott\",");
+                stream.WriteLine("\t\t\"DOTweenPro.Scripts\"");
+                stream.WriteLine("\t],");
+                stream.WriteLine("\t\"includePlatforms\": [");
+                stream.WriteLine("\t\t\"Editor\"");
+                stream.WriteLine("\t]");
+                stream.WriteLine("}");
+            }
+
+            UnityEditor.AssetDatabase.Refresh();
+        }
+
+        private static string GetCurrentFilePath([System.Runtime.CompilerServices.CallerFilePath] string filePath = null) => filePath;
+#endif
     }
 }
